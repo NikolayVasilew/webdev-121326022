@@ -14,7 +14,7 @@ function textResult(id, text, isError) {
 const tools = [
   {
     name: 'find_lecture',
-    description: 'Return the title and topics of one course lecture by its number, 1 to 12. Use it when asked what a lecture covers.',
+    description: "Retrieve the lecture title, topics, and summary for a specific lecture number from the course materials.",
     inputSchema: {
       type: 'object',
       properties: { number: { type: 'integer', description: 'Lecture number, 1 to 12' } },

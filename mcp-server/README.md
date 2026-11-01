@@ -60,3 +60,4 @@ got: {"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"find_lectur
 
 ## The description experiment
 <!-- Three sentences: what you changed in the description, whether the model chose the tool differently, and why you think so. -->
+I changed the description of the find_lecture tool to make it more specific by stating that it retrieves the title, topics, and summary of a lecture. The model selected the same tool for the question "What does lecture 7 cover?" in both experiments. This suggests that the more precise description reinforced the relevance of the tool to the user's request, although the unchanged tool selection may also be explained by the clear intent of the question.
