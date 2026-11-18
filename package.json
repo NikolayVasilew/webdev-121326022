@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:seed": "node src/data/seed.js",
+    "test": "node --test test/*.test.js",
     "mcp": "node mcp-server/server.js"
   },
   "repository": {
@@ -20,5 +21,12 @@
   "bugs": {
     "url": "https://github.com/NikolayVasilew/webdev-121326022/issues"
   },
-  "homepage": "https://github.com/NikolayVasilew/webdev-121326022#readme"
+  "homepage": "https://github.com/NikolayVasilew/webdev-121326022#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.2.0",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0"
+  }
 }

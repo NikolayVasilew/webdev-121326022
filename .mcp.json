@@ -1,0 +1,17 @@
+{
+	"mcpServers": {
+		"my-project": {
+			"type": "stdio",
+			"command": "node",
+			"args": [
+				"mcp-server/server.js"
+			],
+			"tools": [
+				"*"
+			],
+			"env": {
+				"MCP_TOKEN": "${MCP_TOKEN}"
+			}
+		}
+	}
+}

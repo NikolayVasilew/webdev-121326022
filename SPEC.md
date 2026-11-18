@@ -53,52 +53,34 @@ Club events.
 <!-- At least three tools your own MCP server exposes over this project's data.
      Each tool calls the same service functions the HTTP API calls, so the same rules apply.
      A description shorter than 20 characters is not a description. -->
-Tool
-
-What it does
-
-Who may call it
-
-list_upcoming_events
-
-Returns published upcoming club events with dates, locations, and available places so users can discover activities.
-
-Anyone
-
-get_event_details
-
-Returns the complete details of a specific published event using its event ID, including capacity and registration information.
-
-Anyone
-
-search_events
-
-Searches published club events by title or keyword and returns matching event summaries with dates and locations.
-
-Anyone
-
-register_for_event
-
-Registers the authenticated user for an event if places are available and the user is not already registered.
-
-Authenticated users
-
-cancel_event_registration
-
-Cancels the authenticated user's existing registration and makes the place available again.
-
-Authenticated users
-
+      Tool                |               What it does                  | Who may call it
+list_upcoming_events      | Returns published upcoming club events      | Anyone
+                            with dates,locations, and available
+                            places so users can discover
+                            activities.
+get_event_details         | Returns the complete details of a           | Anyone
+                            specific published event using its
+                            event ID, including capacity and
+                            registration information.
+search_events             | Searches published club events by title or  | Anyone
+                            keyword and returns matching event
+                            summaries with dates and locations.
+register_for_event        | Registers the authenticated                 | Authenticated users
+                            users for event if places are available
+                            and the user is not already registered.
+cancel_event_registration | Cancels the authenticated user's existing   | Authenticated users
+                            registration and makes the  place available
+                            again.
 
 ## UI
 - Stack: Node.js 22 with Express for the backend, SQLite for persistent storage, and plain HTML, CSS, and JavaScript for the frontend.
 - Screens:
-Login and registration page.
-Upcoming events list page.
-Event details page.
-Event creation and editing page for administrators.
-Event participant list for administrators.
-User account page with registration management.
+- Login and registration page.
+- Upcoming events list page.
+- Event details page.
+- Event creation and editing page for administrators.
+- Event participant list for administrators.
+- User account page with registration management.
 - The interface must be responsive and usable on desktop and mobile browsers.
 - Every screen must provide appropriate loading, empty, error, and success states.
 - UI checklist: docs/UI.md
@@ -106,14 +88,14 @@ User account page with registration management.
 ## Architecture
 <!-- Exercise 3. One request traced through every layer, naming the file for each one,
      plus one place where your own code does not match this layering. -->
-HTTP entry point: src/server.js starts the Express application.
-Routing layer: src/routes/events.js handles event listing, details, and registration HTTP requests.
-Authentication layer: src/middleware/auth.js verifies the user's session and role.
-Business logic layer: src/services/eventService.js implements event discovery, registration, cancellation, and capacity rules.
-Data access layer: src/data/eventRepository.js executes parameterized SQLite queries.
-Database schema: src/data/schema.sql defines users, events, and registrations.
-Views: src/views/ contains the HTML templates for the event list and event details.
-Frontend assets: public/css/ and public/js/ contain styles and client-side behavior.
+- HTTP entry point: src/server.js starts the Express application.
+- Routing layer: src/routes/events.js handles event listing, details, and registration HTTP requests.
+- Authentication layer: src/middleware/auth.js verifies the user's session and role.
+- Business logic layer: src/services/eventService.js implements event discovery, registration, cancellation, and capacity rules.
+- Data access layer: src/data/eventRepository.js executes parameterized SQLite queries.
+- Database schema: src/data/schema.sql defines users, events, and registrations.
+- Views: src/views/ contains the HTML templates for the event list and event details.
+- Frontend assets: public/css/ and public/js/ contain styles and client-side behavior.
 One request traced through the layers: GET /events → src/routes/events.js → src/services/eventService.js → src/data/eventRepository.js → SQLite → event list view.
 Potential layering violation to check: route handlers must not execute SQL queries directly; they must call the service layer.
 
@@ -121,65 +103,65 @@ Potential layering violation to check: route handlers must not execute SQL queri
 <!-- Every criterion carries an id. A test proves it by naming that id in its title, for example
      test('AC-3 a booking that overlaps another is refused with 409', ...).
      Say who acts, what they see, and what must be true in the database. -->
-[AC-1] A visitor who opens /events sees a list of upcoming published events with their title, date, location, and available places.
-[AC-2] A visitor who selects an event sees its full description, date, time, location, and maximum capacity.
-[AC-3] A user who enters a valid email and password can sign in and access the events list.
-[AC-4] A signed-in user who registers for an event with available places sees a confirmation message and the number of available places decreases by one.
-[AC-5] A signed-in user who tries to register for a full event sees the message "This event is full" and no registration is created.
-[AC-6] A signed-in user who cancels an existing registration sees a confirmation message and the number of available places increases by one.
-[AC-7] An administrator who creates or edits an event sees the updated event information in the events list.
-[AC-8] An administrator who opens an event's participant list sees the names and email addresses of its registered users.
-[AC-9] A user who tries to register twice for the same event receives a clear message, and only one registration exists in the database.
-[AC-10] A non-administrator who attempts to create, edit, publish, or cancel an event is denied access, and the event remains unchanged.
-[AC-11] An administrator who uploads a valid event poster receives suggested event details in the form and can edit them before saving.
-[AC-12] When the model feature fails, the administrator can manually enter and save event details without losing the form.
+- [AC-1] A visitor who opens /events sees a list of upcoming published events with their title, date, location, and available places.
+- [AC-2] A visitor who selects an event sees its full description, date, time, location, and maximum capacity.
+- [AC-3] A user who enters a valid email and password can sign in and access the events list.
+- [AC-4] A signed-in user who registers for an event with available places sees a confirmation message and the number of available places decreases by one.
+- [AC-5] A signed-in user who tries to register for a full event sees the message "This event is full" and no registration is created.
+- [AC-6] A signed-in user who cancels an existing registration sees a confirmation message and the number of available places increases by one.
+- [AC-7] An administrator who creates or edits an event sees the updated event information in the events list.
+- [AC-8] An administrator who opens an event's participant list sees the names and email addresses of its registered users.
+- [AC-9] A user who tries to register twice for the same event receives a clear message, and only one registration exists in the database.
+- [AC-10] A non-administrator who attempts to create, edit, publish, or cancel an event is denied access, and the event remains unchanged.
+- [AC-11] An administrator who uploads a valid event poster receives suggested event details in the form and can edit them before saving.
+- [AC-12] When the model feature fails, the administrator can manually enter and save event details without losing the form.
 
 ### Slice 1: sign-in and the upcoming events list
-[AC-13] A visitor who opens /events without signing in is redirected to /login and cannot see the events list.
-[AC-14] A user who signs in with a seeded account sees the three seeded upcoming events at /events, each displaying its title, date, location, and number of available places.
-[AC-15] A seeded administrator who signs in successfully sees the same upcoming events list.
-[AC-16] When an event is deleted from the database and the user reloads /events, that event no longer appears in the list.
+- [AC-13] A visitor who opens /events without signing in is redirected to /login and cannot see the events list.
+- [AC-14] A user who signs in with a seeded account sees the three seeded upcoming events at /events, each displaying its title, date, location, and number of available places.
+- [AC-15] A seeded administrator who signs in successfully sees the same upcoming events list.
+- [AC-16] When an event is deleted from the database and the user reloads /events, that event no longer appears in the list.
 
 
 ## Traceability
 <!-- Filled in from Exercise 3 onward: each AC id, and the test that names it. -->
-Criterion
-Test
-AC-1
-test('AC-1 upcoming published events are listed', ...)
-AC-2
-test('AC-2 event details show complete information', ...)
-AC-3
-test('AC-3 valid credentials allow sign-in', ...)
-AC-4
-test('AC-4 registration reduces available places', ...)
-AC-5
-test('AC-5 full event rejects registration', ...)
-AC-6
-test('AC-6 cancellation restores available places', ...)
-AC-7
-test('AC-7 administrator event changes appear in list', ...)
-AC-8
-test('AC-8 administrator can view participants', ...)
-AC-9
-test('AC-9 duplicate registration is prevented', ...)
-AC-10
-test('AC-10 non-administrator event management is denied', ...)
-AC-11
-test('AC-11 poster assistance suggests event details', ...)
-AC-12
-test('AC-12 model failure allows manual event creation', ...)
-AC-13
-test('AC-13 unauthenticated visitor is redirected', ...)
-AC-14
-test('AC-14 seeded user sees three upcoming events', ...)
-AC-15
-test('AC-15 seeded administrator sees upcoming events', ...)
-AC-16
-test('AC-16 deleted event disappears after reload', ...)
+- Criterion
+- Test
+- AC-1
+- test('AC-1 upcoming published events are listed', ...)
+- AC-2
+- test('AC-2 event details show complete information', ...)
+- AC-3
+- test('AC-3 valid credentials allow sign-in', ...)
+- AC-4
+- test('AC-4 registration reduces available places', ...)
+- AC-5
+- test('AC-5 full event rejects registration', ...)
+- AC-6
+- test('AC-6 cancellation restores available places', ...)
+- AC-7
+- test('AC-7 administrator event changes appear in list', ...)
+- AC-8
+- test('AC-8 administrator can view participants', ...)
+- AC-9
+- test('AC-9 duplicate registration is prevented', ...)
+- AC-10
+- test('AC-10 non-administrator event management is denied', ...)
+- AC-11
+- test('AC-11 poster assistance suggests event details', ...)
+- AC-12
+- test('AC-12 model failure allows manual event creation', ...)
+- AC-13
+- test('AC-13 unauthenticated visitor is redirected', ...)
+- AC-14
+- test('AC-14 seeded user sees three upcoming events', ...)
+- AC-15
+- test('AC-15 seeded administrator sees upcoming events', ...)
+- AC-16
+- test('AC-16 deleted event disappears after reload', ...)
 
 ## Spec vs result
 <!-- After the agent builds the slice: which criteria passed, which it missed or reinterpreted, and what you changed in this spec because of it. -->
-Passed: To be completed after manually testing Slice 1.
-Missed: To be completed after manually testing Slice 1.
-Changed: To be completed after manually testing Slice 1.
+- Passed: To be completed after manually testing Slice 1.
+- Missed: To be completed after manually testing Slice 1.
+- Changed: To be completed after manually testing Slice 1.
