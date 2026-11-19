@@ -4,7 +4,8 @@
   "description": "This repository is your workspace for the whole course: Exercise 1 in `mcp-server/`, and your project (Exercises 2–5) in the rest of it. Everything runs in your browser through GitHub Codespaces, so nothing needs to be installed on your laptop.",
   "main": "index.js",
   "directories": {
-    "doc": "docs"
+    "doc": "docs",
+    "test": "test"
   },
   "scripts": {
     "db:seed": "node src/data/seed.js",
